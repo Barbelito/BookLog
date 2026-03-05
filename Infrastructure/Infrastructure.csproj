@@ -12,9 +12,6 @@
 
   <ItemGroup>
     <Folder Include="Persistence\EFC\Repositories\" />
-    <Folder Include="Persistence\EFC\Entities\" />
-    <Folder Include="Persistence\EFC\Contexts\" />
-    <Folder Include="Persistence\EFC\Configurations\" />
   </ItemGroup>
 
   <ItemGroup>
