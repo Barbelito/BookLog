@@ -19,6 +19,10 @@ namespace Infrastructure.Persistence.EFC.Configurations
                 .IsRequired()
                 .HasMaxLength(50);
 
+            builder.Property(u => u.Username)
+                .IsRequired()
+                .HasMaxLength(50);
+
             builder.Property(u => u.Email)
                 .IsRequired()
                 .HasMaxLength(100);

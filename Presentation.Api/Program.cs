@@ -1,11 +1,13 @@
 using Application.Extensions;
+using Application.Users.Factories;
 using Infrastructure.Extensions;
 using Infrastructure.Persistence.EFC.Contexts;
+using Presentation.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
-
+builder.Services.AddValidation();
 builder.Services.AddApplication(builder.Configuration, builder.Environment);
 
 builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
@@ -21,5 +23,11 @@ if (app.Environment.IsDevelopment())
 
 app.MapOpenApi();
 app.UseHttpsRedirection();
+
+app.MapPost("/api/users", (RegisterUserRequest req) =>
+{
+    var dto = UserFactory.Create(req.FirstName, req.LastName, req.Username, req.Email);
+});
+
 
 app.Run();
