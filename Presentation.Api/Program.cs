@@ -1,4 +1,5 @@
 using Application.Extensions;
+using Application.Users.Abstractions;
 using Application.Users.Factories;
 using Infrastructure.Extensions;
 using Infrastructure.Persistence.EFC.Contexts;
@@ -24,9 +25,11 @@ if (app.Environment.IsDevelopment())
 app.MapOpenApi();
 app.UseHttpsRedirection();
 
-app.MapPost("/api/users", (RegisterUserRequest req) =>
+app.MapPost("/api/users", async (RegisterUserRequest req, IUserService service, CancellationToken ct = default) =>
 {
     var dto = UserFactory.Create(req.FirstName, req.LastName, req.Username, req.Email);
+    var result = await service.RegisterUserAsync(dto, ct);
+    return result ? Results.Created() : Results.BadRequest();
 });
 
 
