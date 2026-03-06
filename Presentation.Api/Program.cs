@@ -1,5 +1,6 @@
 using Application.Extensions;
 using Infrastructure.Extensions;
+using Infrastructure.Persistence.EFC.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,9 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    
+    using var scope = app.Services.CreateScope();
+    var dataContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await dataContext.Database.EnsureCreatedAsync();
 }
 
 app.MapOpenApi();
