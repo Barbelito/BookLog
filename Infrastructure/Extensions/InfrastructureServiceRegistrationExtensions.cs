@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Infrastructure.Persistence.EFC.Contexts;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -11,8 +14,33 @@ namespace Infrastructure.Extensions
             ArgumentNullException.ThrowIfNull(configuration);
             ArgumentNullException.ThrowIfNull(env);
 
-            // Register application services here
-            // e.g., services.AddScoped<IMyService, MyService>();
+            if (env.IsDevelopment())
+            {
+                services.AddSingleton(_ =>
+                {
+                    var connectionString = "Data Source=file:memdb1?mode=memory&cache=shared";
+                    var conn = new SqliteConnection(connectionString);
+                    conn.Open();
+
+                    Console.WriteLine($"Using In-Memory Database with connection string: {connectionString}");
+
+                    return conn;
+                });
+
+                services.AddDbContext<DataContext>((sp, options) =>
+                {
+                    var conn = sp.GetRequiredService<SqliteConnection>();
+                    options.UseSqlite(conn);
+
+                });
+            }
+            else
+            {
+                var connectionString = configuration.GetConnectionString("ProductionDatabase")
+                    ?? throw new InvalidOperationException("Missing ConnectionString to Production Database");
+
+                services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+            }
 
             return services;
         }
