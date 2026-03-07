@@ -39,6 +39,24 @@ public sealed class User
         CreatedAt = DateTime.UtcNow;
         ModifiedAt = DateTime.UtcNow;
     }
+    private User(
+    string id,
+    string firstName,
+    string lastName,
+    string username,
+    string email,
+    DateTime createdAt,
+    DateTime modifiedAt)
+    {
+        Id = Required(id, nameof(id));
+        FirstName = Required(firstName, nameof(firstName));
+        LastName = Required(lastName, nameof(lastName));
+        Username = Required(username, nameof(username));
+        Email = NormalizeEmail(email);
+        CreatedAt = createdAt;
+        ModifiedAt = modifiedAt;
+    }
+
 
     public static User Create(string firstName, string lastName, string username, string email)
     {
@@ -53,6 +71,17 @@ public sealed class User
         Username = Required(username, nameof(username));
         Email = NormalizeEmail(email);
         ModifiedAt = DateTime.UtcNow;
+    }
+    public static User FromEntity(
+    string id,
+    string firstName,
+    string lastName,
+    string username,
+    string email,
+    DateTime createdAt,
+    DateTime modifiedAt)
+    {
+        return new User(id, firstName, lastName, username, email, createdAt, modifiedAt);
     }
 
 }

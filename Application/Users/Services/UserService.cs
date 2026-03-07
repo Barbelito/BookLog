@@ -20,8 +20,9 @@ public sealed class UserService(IUserRepository userRepository) : IUserService
 
         var user = User.Create(dto.FirstName, dto.LastName, dto.Username, dto.Email);
 
-        var id = await userRepository.AddAsync(user, ct);
-        return !string.IsNullOrWhiteSpace(id);
+        var createdUser = await userRepository.AddAsync(user, ct);
+        return createdUser is not null && !string.IsNullOrWhiteSpace(createdUser.Id);
+
     }
 }
 
