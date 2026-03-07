@@ -29,7 +29,9 @@ app.MapPost("/api/users", async (RegisterUserRequest req, IUserService service, 
 {
     var dto = UserFactory.Create(req.FirstName, req.LastName, req.Username, req.Email);
     var result = await service.RegisterUserAsync(dto, ct);
-    return result ? Results.Created() : Results.BadRequest();
+    return result.IsSuccess
+        ? Results.Created($"/api/users/{result.Value!.Id}", result.Value)
+        : Results.Problem(result.Error.Message, statusCode: result.Error.HttpStatus);
 });
 
 
