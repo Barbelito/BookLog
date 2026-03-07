@@ -2,6 +2,7 @@
 using Domain.Aggregates.Users;
 using Infrastructure.Persistence.EFC.Contexts;
 using Infrastructure.Persistence.EFC.Entities;
+using Infrastructure.Persistence.EFC.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.EFC.Repositories.Users;
@@ -14,21 +15,12 @@ internal class UserRepository(DataContext context) : RepositoryBase<User, string
         return entity is not null ? ToModel(entity) : null;
     }
 
-    protected override UserEntity ToEntity(User model)
-    {
-        var entity = new UserEntity
-        {
-            Id = model.Id,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Username = model.Username,
-            Email = model.Email
-        };
-        return entity;
-    }
+    protected override UserEntity ToEntity(User model) =>  UserEntityFactory.Create(model);
 
-    protected override User ToModel(UserEntity entity)
-    {
-        throw new NotImplementedException();
-    }
+    protected override User ToModel(UserEntity entity) => User.Create(
+        entity.FirstName,
+        entity.LastName,
+        entity.Username,
+        entity.Email
+    );
 }
