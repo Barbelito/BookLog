@@ -17,10 +17,14 @@ internal class UserRepository(DataContext context) : RepositoryBase<User, string
 
     protected override UserEntity ToEntity(User model) =>  UserEntityFactory.Create(model);
 
-    protected override User ToModel(UserEntity entity) => User.Create(
+    protected override User ToModel(UserEntity entity) => User.FromEntity(
+        entity.Id,
         entity.FirstName,
         entity.LastName,
         entity.Username,
-        entity.Email
+        entity.Email,
+        entity.CreatedAt,
+        entity.ModifiedAt
     );
+
 }

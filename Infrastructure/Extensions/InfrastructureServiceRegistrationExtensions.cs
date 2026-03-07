@@ -1,4 +1,6 @@
-﻿using Infrastructure.Persistence.EFC.Contexts;
+﻿using Domain.Abstractions.Repositories.Users;
+using Infrastructure.Persistence.EFC.Contexts;
+using Infrastructure.Persistence.EFC.Repositories.Users;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +43,8 @@ namespace Infrastructure.Extensions
 
                 services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             }
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }
